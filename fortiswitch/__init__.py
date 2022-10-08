@@ -1,0 +1,1 @@
+from fortiswitch.api_dispatcher import GetHandler
