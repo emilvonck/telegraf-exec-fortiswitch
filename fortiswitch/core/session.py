@@ -7,7 +7,7 @@ def login(
     host: str,
     ssl_verify: bool = True,
     endpoint: str = "login",
-    port: bool = 443,
+    port: int = 443,
     **kwargs,
 ) -> Session:
     """Login function.
