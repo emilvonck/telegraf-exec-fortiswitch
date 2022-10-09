@@ -8,7 +8,7 @@ HEADERS = {"Accept": "application/json"}
 
 
 def get_req(session: Session, url: str):
-    response = session.get(url=url, headers=HEADERS, verify=session.ssl_verify)
+    response = session.get(url=url, headers=HEADERS, verify=session.ignore_ssl)
     logout(session)
 
     return response

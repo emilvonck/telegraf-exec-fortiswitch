@@ -5,7 +5,7 @@ def login(
     username: str,
     password: str,
     host: str,
-    ssl_verify: bool = True,
+    ignore_ssl: bool = False,
     endpoint: str = "login",
     port: int = 443,
     **kwargs,
@@ -28,13 +28,13 @@ def login(
     }
     url = f"https://{host}:{port}/{endpoint}"
     session = Session()
-    response = session.post(url, data=data, verify=ssl_verify)
+    response = session.post(url, data=data, verify=ignore_ssl)
 
     response.raise_for_status()
 
     session.host = host
     session.port = port
-    session.ssl_verify = ssl_verify
+    session.ignore_ssl = ignore_ssl
 
     return session
 
