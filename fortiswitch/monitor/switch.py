@@ -3,6 +3,8 @@ import json
 from requests.sessions import Session
 
 from fortiswitch.core import get_req
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "api/v2/monitor/switch"
 HEADERS = {"Accept": "application/json"}
