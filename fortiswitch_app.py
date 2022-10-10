@@ -1,6 +1,6 @@
 import argparse
-from fortiswitch import GetHandler
 
+from fortiswitch import GetHandler
 
 my_parser = argparse.ArgumentParser(
     prog="fortiswitch_app",

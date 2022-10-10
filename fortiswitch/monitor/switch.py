@@ -1,3 +1,5 @@
+import json
+
 from requests.sessions import Session
 
 from fortiswitch.core import get_req
@@ -10,11 +12,15 @@ def get_port_state(session: Session):
     endpoint = "port"
     url = f"https://{session.host}:{session.port}/{BASE_URL}/{endpoint}"
 
-    return (get_req(session=session, url=url)).json()
+    response_data = get_req(session=session, url=url).json()
+
+    return json.dumps(response_data)
 
 
 def get_poe_status(session: Session):
     endpoint = "poe-status"
     url = f"https://{session.host}:{session.port}/{BASE_URL}/{endpoint}"
 
-    return (get_req(session=session, url=url)).json()
+    response_data = get_req(session=session, url=url).json()
+
+    return json.dumps(response_data)
