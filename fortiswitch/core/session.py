@@ -39,7 +39,7 @@ def login(
     return session
 
 
-def logout(session: Session, endpoint: str = "/logout") -> None:
+def logout(session: Session, endpoint: str = "logout") -> None:
     """Logout function.
 
     Args:
