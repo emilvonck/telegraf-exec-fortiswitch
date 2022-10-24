@@ -30,5 +30,5 @@ my_parser.add_argument(
 
 args = my_parser.parse_args()
 
-test = GetHandler(**vars(args))
-print(test)
+data = GetHandler(**vars(args))
+print(data)
