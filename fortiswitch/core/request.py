@@ -1,7 +1,7 @@
 """Functions for requests."""
 from requests.sessions import Session
 
-from fortiswitch.core import logout
+from fortiswitch.core.session import logout
 
 HEADERS = {"Accept": "application/json"}
 
