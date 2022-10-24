@@ -1,10 +1,11 @@
+# noqa: D100
 import argparse
 
 from fortiswitch import GetHandler
 
 my_parser = argparse.ArgumentParser(
     prog="fortiswitch_app",
-    usage="%(prog)s [options] path",
+    usage="%(prog)s [options]",
     description="Fetch data from FortiSwitch API",
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
