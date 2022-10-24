@@ -1,12 +1,9 @@
 """Functions for interacting with FortiSwitchOS API."""
 import json
 
-import urllib3
 from requests.sessions import Session
 
 from fortiswitch.core import req
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "api/v2/monitor/switch"
 HEADERS = {"Accept": "application/json"}
