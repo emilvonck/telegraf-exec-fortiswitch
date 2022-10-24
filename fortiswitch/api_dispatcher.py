@@ -18,7 +18,9 @@ def GetHandler(endpoint: str, **kwargs):
     """Handle data return based on mapping."""
     if endpoint not in endpoints:
         raise ValueError(f"Currently supported endpoints are: {endpoints_str}")
+
     if not kwargs.get("ignore_ssl"):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
     session = login(**kwargs)
     return API_GET_MAPPING[endpoint](session)
