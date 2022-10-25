@@ -24,13 +24,13 @@ def req(session: Session, url: str):
     """
     try:
         response = session.get(url=url, headers=HEADERS, verify=session.ignore_ssl)
-        log_dict = {
+        """ log_dict = {
             "level": 20,
             "message_type": "HTTPSuccess",
             "message": url,
             "http_response_code": response.status_code,
         }
-        logging.format_logs(**log_dict)
+        logging.format_logs(**log_dict) """
         return response
     except requests.exceptions.HTTPError as err:
         logging.format_logs(level=40, message_type="HTTPError", message=err)

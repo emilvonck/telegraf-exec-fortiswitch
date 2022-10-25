@@ -31,12 +31,12 @@ def get_port_state(session: Session):
         response_data = req(session=session, url=url).json()
         for _, interface_property in response_data["results"].items():
             return_data.append(interface_property)
-        log_dict = {
+        """ log_dict = {
             "level": 20,
             "message_type": "Parse",
             "message": f"Successfully parsed {len(return_data)} interfaces {url}",
         }
-        logging.format_logs(**log_dict)
+        logging.format_logs(**log_dict) """
         return json.dumps(return_data)
 
     except KeyError as err:
