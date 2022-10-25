@@ -5,6 +5,7 @@
 import logging
 import os
 import sys
+from typing import Any
 
 try:
     LOGLEVEL = os.environ["LOGLEVEL"]
@@ -17,7 +18,7 @@ class LogHandler:
     """Class to handle logging."""
 
     def __init__(self, instance):
-        """Set upp logger."""
+        """Set up logger."""
         logging.basicConfig(
             stream=sys.stdout,
             level=LOGLEVEL,
@@ -26,8 +27,16 @@ class LogHandler:
 
         self.logger = logging.getLogger(instance)
 
-    def format_logs(self, level, message_type, message):
-        """Error messages formatting."""
+    def format_logs(self, level: int, message_type: Any, message: Any, **kwargs):
+        """Log formatting.
+
+        Args:
+            level (int): Log level.
+            message_type (str: Message type string.
+            message (str): Message string.
+        """
         info = {"type": message_type, "message": message}
+        for key, value in kwargs.items():
+            info.update({key: value})
 
         self.logger.log(level, info)
