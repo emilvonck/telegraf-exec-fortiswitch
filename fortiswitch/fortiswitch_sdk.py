@@ -34,6 +34,7 @@ class FortiSwitch:
         }
 
         self._monitor_base_url = "api/v2/monitor"
+        self.property_extractors()
 
     @property
     def verify(self):
@@ -61,14 +62,14 @@ class FortiSwitch:
     @property
     def system_status(self):
         # noqa: D102
-        return self.extractors["system_status"]
+        return self._system_status
 
-    @property
-    def extractors(self):
+    def property_extractors(self):
         # noqa: D102
         extractors = {"system_status": self._get_system_status()}
 
-        return extractors
+        for k, v in extractors.items():
+            setattr(self, f"_{k}", v)
 
     def _login(self):
         base_url = "login"
