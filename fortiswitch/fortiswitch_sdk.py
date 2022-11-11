@@ -4,6 +4,10 @@ from sys import version as python_version
 import requests
 import urllib3
 
+from fortiswitch.utils import LogHandler
+
+logging = LogHandler(__name__)
+
 
 class FortiSwitch:
     """Class for interacting with the FortiSwitchOS API."""
@@ -20,7 +24,7 @@ class FortiSwitch:
         self.host = host
         self.username = username
         self.password = password
-        self.verify = verify
+        self._verify = verify
         self.session = requests.Session()
 
         self.headers = {
@@ -30,25 +34,39 @@ class FortiSwitch:
         }
 
         self._monitor_base_url = "api/v2/monitor"
-        self._system_status = self._get_system_status()
+
+    @property
+    def verify(self):
+        # noqa: D102
+        return self._verify
+
+    @verify.setter
+    def verify(self, value: bool):
+        # noqa: D102
+        if not isinstance(value, bool):
+            raise TypeError(f"invalid type for '{value}' must be of type {type(True)}")
+        else:
+            self._verify = value
 
     @property
     def hostname(self):
         # noqa: D102
-        return self.extractors["hostname"]
+        return self.system_status["hostname"]
 
     @property
     def serial_number(self):
         # noqa: D102
-        return self.extractors["serial_number"]
+        return self.system_status["serial_number"]
+
+    @property
+    def system_status(self):
+        # noqa: D102
+        return self.extractors["system_status"]
 
     @property
     def extractors(self):
         # noqa: D102
-        extractors = {
-            "hostname": self._system_status["hostname"],
-            "serial_number": self._system_status["serial_number"],
-        }
+        extractors = {"system_status": self._get_system_status()}
 
         return extractors
 
@@ -67,11 +85,14 @@ class FortiSwitch:
         base_url = "logout"
         url = f"https://{self.host}/{base_url}"
 
-        self._req(url=url, method="post", raise_for_status=False)
+        self._req(url=url, method="post")
 
-    def _req(
-        self, url, method="get", params=None, body=None, raise_for_status: bool = True
-    ):
+    def _req(self, url, method="get", params=None, body=None):
+
+        logging_dict = {
+            "message_type": f"http {method}",
+            "url": url,
+        }
 
         if not self.verify:
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -79,8 +100,31 @@ class FortiSwitch:
         response = self.session.request(
             url=url, data=body, params=params, method=method, verify=self.verify
         )
-        if raise_for_status:
-            response.raise_for_status()
+
+        if response:
+            level = 20
+            logging_dict.update(
+                {
+                    "message": response.reason,
+                    "status_code": response.status_code,
+                    "level": level,
+                    "response_url": response.url,
+                }
+            )
+
+        else:
+            level = 30
+            logging_dict.update(
+                {
+                    "message": response.reason,
+                    "status_code": response.status_code,
+                    "level": level,
+                    "response_url": response.url,
+                }
+            )
+
+        logging.format_logs(**logging_dict)
+
         return response
 
     def _get_system_status(self) -> dict:
@@ -88,7 +132,7 @@ class FortiSwitch:
         base_url = "system/status"
         url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
 
-        result = self.session.get(url=url, headers=self.headers, verify=self.verify)
+        result = self._req(url=url, method="get")
         self._logout()
 
         return result.json()["results"]
