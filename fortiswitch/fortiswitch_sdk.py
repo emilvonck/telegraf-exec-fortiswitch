@@ -137,3 +137,168 @@ class FortiSwitch:
         self._logout()
 
         return result.json()["results"]
+
+    def get_switch_port_state(self):
+        # noqa: D102
+        self._login()
+        base_url = "switch/port"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_switch_port_statistics(self):
+        # noqa: D102
+        self._login()
+        base_url = "switch/port-statistics"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_switch_poe_status(self):
+        # noqa: D102
+        self._login()
+        base_url = "switch/poe-status"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_switch_poe_sum(self):
+        # noqa: D102
+        self._login()
+        base_url = "switch/poe-summary"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_switch_lldp_port_state(self):
+        # noqa: D102
+        self._login()
+        base_url = "switch/lldp-state"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_hw_status(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/hardware-status"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_resource(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/resource"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_psu_status(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/psu-status"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_fan_status(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/fan-status"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_interfaces(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/interface-physical"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_pcb_temp(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/pcb-temp"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_perf_status(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/performance-status"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_system_upgrade_status(self):
+        # noqa: D102
+        self._login()
+        base_url = "system/upgrade-status"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_hw_cpu_info(self):
+        # noqa: D102
+        self._login()
+        base_url = "hardware/cpu"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
+
+    def get_hw_memory_info(self):
+        # noqa: D102
+        self._login()
+        base_url = "hardware/memory"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()["results"]
