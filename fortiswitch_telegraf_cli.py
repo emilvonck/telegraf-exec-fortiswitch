@@ -27,14 +27,7 @@ def enrich_dictionary(fortiswitch_obj: Type[FortiSwitch], data: dict):
 def get_switch_poe_sum(
     host: str, username: str, password: str, ssl_verify: bool = typer.Argument(True)
 ):
-    """Cli command to get Swith PoE summary.
-
-    Args:
-        host (str): IP/DNS for the FortiSwitch API.
-        username (str): Username for the FortiSwitch API.
-        password (str): Password for the FortiSwitch API.
-        ssl_verify (bool, optional): Whether to verify the SSL certificate presentet from the FortiSwitch API or not. Defaults to typer.Argument(True).
-    """
+    """Cli command to get Swith PoE summary."""
     switch = FortiSwitch(
         host=host, username=username, password=password, verify=ssl_verify
     )
@@ -54,14 +47,7 @@ def get_switch_poe_sum(
 def get_system_upgrade_status(
     host: str, username: str, password: str, ssl_verify: bool = typer.Argument(True)
 ):
-    """Cli command to get system upgrade status via the Fortiswitch API.
-
-    Args:
-        host (str): IP/DNS for the FortiSwitch API.
-        username (str): Username for the FortiSwitch API.
-        password (str): Password for the FortiSwitch API.
-        ssl_verify (bool, optional): Whether to verify the SSL certificate presentet from the FortiSwitch API or not. Defaults to typer.Argument(True).
-    """
+    """Cli command to get system upgrade status via the Fortiswitch API."""
     switch = FortiSwitch(
         host=host, username=username, password=password, verify=ssl_verify
     )
