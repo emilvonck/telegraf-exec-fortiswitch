@@ -1,4 +1,5 @@
 """Cli for return data to Telegraf."""
+import json
 from typing import Type
 
 import typer
@@ -40,7 +41,7 @@ def get_switch_poe_sum(
 
     return_data = {"poe_sum_list": interface_list}
 
-    print(return_data)
+    print(json.dumps(return_data))
 
 
 @app.command()
@@ -57,7 +58,7 @@ def get_system_upgrade_status(
 
     return_data = {"system_upgrade_status": original_data}
 
-    print(return_data)
+    print(json.dumps(return_data))
 
 
 if __name__ == "__main__":
