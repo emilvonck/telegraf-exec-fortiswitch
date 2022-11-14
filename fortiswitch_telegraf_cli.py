@@ -50,5 +50,29 @@ def get_switch_poe_sum(
     print(return_data)
 
 
+@app.command()
+def get_system_upgrade_status(
+    host: str, username: str, password: str, ssl_verify: bool = typer.Argument(True)
+):
+    """Cli command to get system upgrade status via the Fortiswitch API.
+
+    Args:
+        host (str): IP/DNS for the FortiSwitch API.
+        username (str): Username for the FortiSwitch API.
+        password (str): Password for the FortiSwitch API.
+        ssl_verify (bool, optional): Whether to verify the SSL certificate presentet from the FortiSwitch API or not. Defaults to typer.Argument(True).
+    """
+    switch = FortiSwitch(
+        host=host, username=username, password=password, verify=ssl_verify
+    )
+
+    original_data = switch.get_system_upgrade_status()
+    enrich_dictionary(switch, original_data)
+
+    return_data = {"system_upgrade_status": original_data}
+
+    print(return_data)
+
+
 if __name__ == "__main__":
     app()
