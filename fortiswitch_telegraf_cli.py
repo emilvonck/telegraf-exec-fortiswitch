@@ -28,7 +28,7 @@ def enrich_dictionary(fortiswitch_obj: Type[FortiSwitch], data: dict):
 def get_switch_poe_sum(
     host: str, username: str, password: str, ssl_verify: bool = typer.Argument(True)
 ):
-    """Cli command to get Swith PoE summary."""
+    """Cli command to get Swith PoE summary via the Fortiswitch API."""
     switch = FortiSwitch(
         host=host, username=username, password=password, verify=ssl_verify
     )
@@ -57,6 +57,29 @@ def get_system_upgrade_status(
     enrich_dictionary(switch, original_data)
 
     return_data = {"system_upgrade_status": original_data}
+
+    print(json.dumps(return_data))
+
+
+@app.command()
+def get_switch_port_statistics(
+    host: str, username: str, password: str, ssl_verify: bool = typer.Argument(True)
+):
+    """Cli command to get switch port statistics via the Fortiswitch API."""
+    switch = FortiSwitch(
+        host=host, username=username, password=password, verify=ssl_verify
+    )
+
+    port_statistics_list = []
+    for (
+        interface_name,
+        interface_property,
+    ) in switch.get_switch_port_statistics().items():
+        interface_property.update({"Interface": interface_name})
+        enrich_dictionary(switch, interface_property)
+        port_statistics_list.append(interface_property)
+
+    return_data = {"port_statistics_list": port_statistics_list}
 
     print(json.dumps(return_data))
 
