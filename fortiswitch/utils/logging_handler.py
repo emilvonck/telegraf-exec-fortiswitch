@@ -3,6 +3,7 @@
 
 """Code written by Gustav Larsson. Logging setup and handler."""
 
+import json
 import logging
 import os
 import sys
@@ -37,4 +38,6 @@ class LogHandler:
         for k, v in kwargs.items():
             info.update({k: v})
 
-        self.logger.log(level, info)
+        json_info = json.dumps(info)
+
+        self.logger.log(level, json_info)
