@@ -99,23 +99,21 @@ my_parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
 
+my_parser.add_argument("--host", type=str, help="FortiSwitch API host.", required=True)
 my_parser.add_argument(
-    "--host", type=str, help="Host for API connection", required=True
+    "--port", type=int, help="Destination port for FortiSwitch API host", default=443
 )
 my_parser.add_argument(
-    "--port", type=int, help="Destination port for API connection", default=443
+    "--username", type=str, help="FortiSwitch username.", required=True
 )
 my_parser.add_argument(
-    "--username", type=str, help="Username for the Host", required=True
+    "--password", type=str, help="FortiSwitch password.", required=True
 )
 my_parser.add_argument(
-    "--password", type=str, help="Password for the Host", required=True
+    "--cls_method", type=str, help="FortiSwitch class method.", required=True
 )
 my_parser.add_argument(
-    "--cls_method", type=str, help="FortiSwitch class method", required=True
-)
-my_parser.add_argument(
-    "--ignore_ssl", action="store_false", help="Skip SSL verification"
+    "--ignore_ssl", action="store_false", help="Skip SSL certificate verification."
 )
 args = my_parser.parse_args()
 
