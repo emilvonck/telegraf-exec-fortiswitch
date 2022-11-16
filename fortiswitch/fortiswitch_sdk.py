@@ -1,5 +1,6 @@
 # noqa: D100
 from sys import version as python_version
+from typing import Dict, List
 
 import requests
 import urllib3
@@ -138,7 +139,7 @@ class FortiSwitch:
 
         return result.json()["results"]
 
-    def get_switch_port_state(self):
+    def get_switch_port_state(self) -> List[Dict]:
         # noqa: D102
         self._login()
         base_url = "switch/port"
@@ -147,7 +148,13 @@ class FortiSwitch:
         result = self._req(url=url, method="get")
         self._logout()
 
-        return result.json()["results"]
+        interface_list = []
+        for _, interface_property in result.json()["results"].items():
+            interface_property.update({"interface": interface_property["name"]})
+            interface_property.pop("name")
+            interface_list.append(interface_property)
+
+        return interface_list
 
     def get_switch_port_statistics(self):
         # noqa: D102
@@ -158,9 +165,14 @@ class FortiSwitch:
         result = self._req(url=url, method="get")
         self._logout()
 
-        return result.json()["results"]
+        interface_list = []
+        for interface_name, interface_property in result.json()["results"].items():
+            interface_property.update({"interface": interface_name})
+            interface_list.append(interface_property)
 
-    def get_switch_poe_status(self):
+        return interface_list
+
+    def _get_switch_poe_status(self) -> List:
         # noqa: D102
         self._login()
         base_url = "switch/poe-status"
@@ -171,40 +183,25 @@ class FortiSwitch:
 
         return result.json()["results"]
 
-    def get_switch_poe_sum(self):
+    def get_system_poe_status(self) -> Dict:
         # noqa: D102
-        self._login()
-        base_url = "switch/poe-summary"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        system_poe_status = self._get_switch_poe_status()[0]
 
-        result = self._req(url=url, method="get")
-        self._logout()
+        return {k.lower(): v for k, v in system_poe_status.items()}
 
-        return result.json()["results"]
-
-    def get_switch_lldp_port_state(self):
+    def get_switch_poe_status(self) -> List[Dict]:
         # noqa: D102
-        self._login()
-        base_url = "switch/lldp-state"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        switch_poe_status = self._get_switch_poe_status()
+        interface_poe_status = [i for i in switch_poe_status if i.get("Interface")]
+        interface_poe_status_return = []
 
-        result = self._req(url=url, method="get")
-        self._logout()
+        for interface in interface_poe_status:
+            interface = {k.lower(): v for k, v in interface.items()}
+            interface_poe_status_return.append(interface)
 
-        return result.json()["results"]
+        return interface_poe_status_return
 
-    def get_system_hw_status(self):
-        # noqa: D102
-        self._login()
-        base_url = "system/hardware-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
-
-        result = self._req(url=url, method="get")
-        self._logout()
-
-        return result.json()["results"]
-
-    def get_system_resource(self):
+    def _get_system_resource(self) -> Dict:
         # noqa: D102
         self._login()
         base_url = "system/resource"
@@ -214,6 +211,18 @@ class FortiSwitch:
         self._logout()
 
         return result.json()["results"]
+
+    def get_system_cpu_usage(self):
+        # noqa: D102
+        cpu_usage = self._get_system_resource()["cpu"][0]
+
+        return {"cpu_usage": cpu_usage}
+
+    def get_system_mem_usage(self):
+        # noqa: D102
+        mem_usage = self._get_system_resource()["mem"]
+
+        return {"mem_usage": mem_usage}
 
     def get_system_psu_status(self):
         # noqa: D102
@@ -237,17 +246,6 @@ class FortiSwitch:
 
         return result.json()["results"]
 
-    def get_system_interfaces(self):
-        # noqa: D102
-        self._login()
-        base_url = "system/interface-physical"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
-
-        result = self._req(url=url, method="get")
-        self._logout()
-
-        return result.json()["results"]
-
     def get_system_pcb_temp(self):
         # noqa: D102
         self._login()
@@ -257,45 +255,23 @@ class FortiSwitch:
         result = self._req(url=url, method="get")
         self._logout()
 
-        return result.json()["results"]
+        temp_modules = []
+        for module in result.json()["results"]:
+            module.update(
+                {
+                    "value": module["status"]["value"],
+                    "unit": module["status"]["unit"],
+                }
+            )
+            module.pop("status")
+            temp_modules.append(module)
 
-    def get_system_perf_status(self):
-        # noqa: D102
-        self._login()
-        base_url = "system/performance-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
-
-        result = self._req(url=url, method="get")
-        self._logout()
-
-        return result.json()["results"]
+        return temp_modules
 
     def get_system_upgrade_status(self):
         # noqa: D102
         self._login()
         base_url = "system/upgrade-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
-
-        result = self._req(url=url, method="get")
-        self._logout()
-
-        return result.json()["results"]
-
-    def get_hw_cpu_info(self):
-        # noqa: D102
-        self._login()
-        base_url = "hardware/cpu"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
-
-        result = self._req(url=url, method="get")
-        self._logout()
-
-        return result.json()["results"]
-
-    def get_hw_memory_info(self):
-        # noqa: D102
-        self._login()
-        base_url = "hardware/memory"
         url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
 
         result = self._req(url=url, method="get")
