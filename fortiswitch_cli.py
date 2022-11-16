@@ -23,7 +23,7 @@ METHOD_LIST = [
 
 def _enrich_return_data(
     fortiswitch_obj: Type[FortiSwitch], data: Union[List[Dict], Dict]
-) -> None:
+):
     if isinstance(data, dict):
         data.update(
             {
