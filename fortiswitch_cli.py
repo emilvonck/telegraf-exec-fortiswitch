@@ -27,7 +27,7 @@ def _enrich_return_data(
     if isinstance(data, dict):
         data.update(
             {
-                "serial": fortiswitch_obj.serial_number,
+                "serial_number": fortiswitch_obj.serial_number,
                 "hostname": fortiswitch_obj.hostname,
             }
         )
@@ -36,7 +36,7 @@ def _enrich_return_data(
             if isinstance(i, dict):
                 i.update(
                     {
-                        "serial": fortiswitch_obj.serial_number,
+                        "serial_number": fortiswitch_obj.serial_number,
                         "hostname": fortiswitch_obj.hostname,
                     }
                 )
