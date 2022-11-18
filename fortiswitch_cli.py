@@ -47,7 +47,13 @@ def _make_fortiswitch(host, username, password, verify, **kwargs) -> FortiSwitch
     try:
         return FortiSwitch(host, username, password, verify)
     except Exception as err:
-        logging.format_logs(level=40, message_type="make_fortiswitch", message=err)
+        logging_dict = {
+            "level": 40,
+            "message_type": "make_fortiswitch",
+            "failed_host": host,
+            "message": str(err),
+        }
+        logging.format_logs(**logging_dict)
         sys.exit(1)
 
 
@@ -125,5 +131,19 @@ if os.environ.get("FORTISWITCH_USER"):
 
 if os.environ.get("FORTISWITCH_PASS"):
     args.password = os.environ.get("FORTISWITCH_PASS")
+
+missing_args = [
+    {k: v} for k, v in vars(args).items() if not v and not k == "ignore_ssl"
+]
+
+if missing_args:
+    logging_dict = {
+        "level": 40,
+        "message_type": "missing_variables",
+        "message": f"{len(missing_args)} variables are missing",
+        "unset_variables": missing_args,
+    }
+    logging.format_logs(**logging_dict)
+    sys.exit(1)
 
 cli_call(**vars(args))
