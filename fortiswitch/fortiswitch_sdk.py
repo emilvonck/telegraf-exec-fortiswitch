@@ -35,7 +35,7 @@ class FortiSwitch:
         }
 
         self._monitor_base_url = "api/v2/monitor"
-        self.property_extractors()
+        self._property_extractors()
 
     @property
     def verify(self):
@@ -53,21 +53,51 @@ class FortiSwitch:
     @property
     def hostname(self):
         # noqa: D102
-        return self.system_status["hostname"]
+        return self._get_system_status()["hostname"]
+
+    @property
+    def burn_in_mac(self):
+        # noqa: D102
+        return self._system_status["burn_in_mac"]
 
     @property
     def serial_number(self):
         # noqa: D102
-        return self.system_status["serial_number"]
+        return self._system_status["serial_number"]
 
     @property
-    def system_status(self):
+    def model(self):
         # noqa: D102
-        return self._system_status
+        return self._capabilities["results"]["fortiswitch"][0]["system-info"]["model"]
 
-    def property_extractors(self):
+    @property
+    def system_part_number(self):
         # noqa: D102
-        extractors = {"system_status": self._get_system_status()}
+        return self._system_status["system_part_number"]
+
+    @property
+    def os_version(self):
+        # noqa: D102
+        return self._get_switch_capabilities()["version"]
+
+    @property
+    def os_version_build(self):
+        # noqa: D102
+        return self._get_switch_capabilities()["build"]
+
+    @property
+    def bios_version(self):
+        # noqa: D102
+        return self._get_switch_capabilities()["results"]["fortiswitch"][0][
+            "system-info"
+        ]["bios-version"]
+
+    def _property_extractors(self):
+        # noqa: D102
+        extractors = {
+            "system_status": self._get_system_status(),
+            "capabilities": self._get_switch_capabilities(),
+        }
 
         for k, v in extractors.items():
             setattr(self, f"_{k}", v)
@@ -138,6 +168,16 @@ class FortiSwitch:
         self._logout()
 
         return result.json()["results"]
+
+    def _get_switch_capabilities(self):
+        self._login()
+        base_url = "switch/capabilities"
+        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+
+        result = self._req(url=url, method="get")
+        self._logout()
+
+        return result.json()
 
     def get_switch_port_state(self) -> List[Dict]:
         # noqa: D102
@@ -278,3 +318,15 @@ class FortiSwitch:
         self._logout()
 
         return result.json()["results"]
+
+    def get_switch_properties(self) -> dict:
+        # noqa: D102
+        PROPERTY_LIST = [
+            prop
+            for prop in dir(FortiSwitch)
+            if not callable(getattr(FortiSwitch, prop))
+            and not prop.startswith("__")  # noqa: W503
+            and not prop.startswith("_")  # noqa: W503
+        ]
+
+        return {i: getattr(self, i) for i in PROPERTY_LIST}
