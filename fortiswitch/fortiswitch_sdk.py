@@ -53,7 +53,7 @@ class FortiSwitch:
     @property
     def hostname(self):
         # noqa: D102
-        return self._get_system_status()["hostname"]
+        return self._system_status["hostname"]
 
     @property
     def burn_in_mac(self):
