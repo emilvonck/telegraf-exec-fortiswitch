@@ -29,7 +29,7 @@ class FortiSwitch:
             password (str): Password.
             verify (bool, optional): Whether to verify SSL certificates or not. Defaults to True.
         """
-        self.host = host
+        self._host = host
         self._port = port
         self.username = username
         self.password = password
@@ -44,6 +44,11 @@ class FortiSwitch:
 
         self._monitor_base_url = "api/v2/monitor"
         self._property_extractors()
+
+    @property
+    def host(self):
+        # noqa: D102
+        return self._host
 
     @property
     def verify(self):
