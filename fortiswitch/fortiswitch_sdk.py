@@ -78,19 +78,19 @@ class FortiSwitch:
     @property
     def os_version(self):
         # noqa: D102
-        return self._get_switch_capabilities()["version"]
+        return self._capabilities["version"]
 
     @property
     def os_version_build(self):
         # noqa: D102
-        return self._get_switch_capabilities()["build"]
+        return self._capabilities["build"]
 
     @property
     def bios_version(self):
         # noqa: D102
-        return self._get_switch_capabilities()["results"]["fortiswitch"][0][
-            "system-info"
-        ]["bios-version"]
+        return self._capabilities["results"]["fortiswitch"][0]["system-info"][
+            "bios-version"
+        ]
 
     def _property_extractors(self):
         # noqa: D102
