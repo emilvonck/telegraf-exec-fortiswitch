@@ -42,7 +42,6 @@ class FortiSwitch:
             "User-Agent": f"Python {python_version.split(' ', maxsplit=1)[0]}",
         }
 
-        self._monitor_base_url = "api/v2/monitor"
         self._property_extractors()
 
     @property
