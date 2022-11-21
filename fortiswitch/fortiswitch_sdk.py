@@ -13,7 +13,14 @@ logging = LogHandler(__name__)
 class FortiSwitch:
     """Class for interacting with the FortiSwitchOS API."""
 
-    def __init__(self, host: str, username: str, password: str, verify: bool = True):
+    def __init__(
+        self,
+        host: str,
+        username: str,
+        password: str,
+        verify: bool = True,
+        port: int = 443,
+    ):
         """Initializor for the class.
 
         Args:
@@ -23,6 +30,7 @@ class FortiSwitch:
             verify (bool, optional): Whether to verify SSL certificates or not. Defaults to True.
         """
         self.host = host
+        self._port = port
         self.username = username
         self.password = password
         self._verify = verify
@@ -49,6 +57,18 @@ class FortiSwitch:
             raise TypeError(f"invalid type for '{value}' must be of type {type(True)}")
         else:
             self._verify = value
+
+    @property
+    def port(self):
+        # noqa: D102
+        return self._port
+
+    @port.setter
+    def port(self, value: int):
+        if value >= 1 and value <= 65535:
+            self._port = value
+        else:
+            raise ValueError(f"Value: ({value}) must be between '1-65535'")
 
     @property
     def hostname(self):
@@ -103,8 +123,7 @@ class FortiSwitch:
             setattr(self, f"_{k}", v)
 
     def _login(self):
-        base_url = "login"
-        url = f"https://{self.host}/{base_url}"
+        url = "login"
 
         data = {
             "username": self.username,
@@ -114,12 +133,13 @@ class FortiSwitch:
         self._req(url=url, method="post", body=data)
 
     def _logout(self):
-        base_url = "logout"
-        url = f"https://{self.host}/{base_url}"
+        url = "logout"
 
         self._req(url=url, method="post")
 
     def _req(self, url, method="get", params=None, body=None):
+
+        url = f"https://{self.host}:{self.port}/{url}"
 
         logging_dict = {
             "message_type": f"http {method}",
@@ -161,8 +181,7 @@ class FortiSwitch:
 
     def _get_system_status(self) -> dict:
         self._login()
-        base_url = "system/status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/system/status"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -171,8 +190,7 @@ class FortiSwitch:
 
     def _get_switch_capabilities(self):
         self._login()
-        base_url = "switch/capabilities"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/switch/capabilities"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -182,8 +200,7 @@ class FortiSwitch:
     def get_switch_port_state(self) -> List[Dict]:
         # noqa: D102
         self._login()
-        base_url = "switch/port"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/switch/port"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -199,8 +216,7 @@ class FortiSwitch:
     def get_switch_port_statistics(self):
         # noqa: D102
         self._login()
-        base_url = "switch/port-statistics"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/switch/port-statistics"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -215,8 +231,7 @@ class FortiSwitch:
     def _get_switch_poe_status(self) -> List:
         # noqa: D102
         self._login()
-        base_url = "switch/poe-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/switch/poe-status"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -244,8 +259,7 @@ class FortiSwitch:
     def _get_system_resource(self) -> Dict:
         # noqa: D102
         self._login()
-        base_url = "system/resource"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/system/resource"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -267,8 +281,7 @@ class FortiSwitch:
     def get_system_psu_status(self):
         # noqa: D102
         self._login()
-        base_url = "system/psu-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/system/psu-status"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -278,8 +291,7 @@ class FortiSwitch:
     def get_system_fan_status(self):
         # noqa: D102
         self._login()
-        base_url = "system/fan-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/system/fan-status"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -289,8 +301,7 @@ class FortiSwitch:
     def get_system_pcb_temp(self):
         # noqa: D102
         self._login()
-        base_url = "system/pcb-temp"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/system/pcb-temp"
 
         result = self._req(url=url, method="get")
         self._logout()
@@ -311,8 +322,7 @@ class FortiSwitch:
     def get_system_upgrade_status(self):
         # noqa: D102
         self._login()
-        base_url = "system/upgrade-status"
-        url = f"https://{self.host}/{self._monitor_base_url}/{base_url}"
+        url = "api/v2/monitor/system/upgrade-status"
 
         result = self._req(url=url, method="get")
         self._logout()
