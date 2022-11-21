@@ -13,7 +13,14 @@ logging = LogHandler(__name__)
 class FortiSwitch:
     """Class for interacting with the FortiSwitchOS API."""
 
-    def __init__(self, host: str, username: str, password: str, verify: bool = True):
+    def __init__(
+        self,
+        host: str,
+        username: str,
+        password: str,
+        verify: bool = True,
+        port: int = 443,
+    ):
         """Initializor for the class.
 
         Args:
@@ -23,6 +30,7 @@ class FortiSwitch:
             verify (bool, optional): Whether to verify SSL certificates or not. Defaults to True.
         """
         self.host = host
+        self._port = port
         self.username = username
         self.password = password
         self._verify = verify
@@ -49,6 +57,18 @@ class FortiSwitch:
             raise TypeError(f"invalid type for '{value}' must be of type {type(True)}")
         else:
             self._verify = value
+
+    @property
+    def port(self):
+        # noqa: D102
+        return self._port
+
+    @port.setter
+    def port(self, value: int):
+        if value >= 1 and value <= 65535:
+            self._port = value
+        else:
+            raise ValueError(f"Value: ({value}) must be between '1-65535'")
 
     @property
     def hostname(self):
@@ -119,7 +139,7 @@ class FortiSwitch:
 
     def _req(self, url, method="get", params=None, body=None):
 
-        url = f"https://{self.host}/{url}"
+        url = f"https://{self.host}:{self.port}/{url}"
 
         logging_dict = {
             "message_type": f"http {method}",
