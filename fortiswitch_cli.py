@@ -66,6 +66,7 @@ def _endpoint_dispatcher(fortiswitch_obj: Type[FortiSwitch], cls_method: str):
             "given_method": cls_method,
             "supported_methods": METHOD_LIST,
         }
+        fortiswitch_obj._logout()
         logging.format_logs(**logging_dict)
         sys.exit(1)
 
@@ -94,6 +95,8 @@ def cli_call(host, username, password, ignore_ssl, cls_method, **kwargs) -> None
     switch = _make_fortiswitch(**switch_kwargs)
     original_data = _endpoint_dispatcher(switch, cls_method)
     return_data = {cls_method: _enrich_return_data(switch, original_data)}
+
+    switch._logout()
 
     print(json.dumps(return_data))
 
