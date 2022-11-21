@@ -41,7 +41,7 @@ class FortiSwitch:
             "Content-Type": "application/json",
             "User-Agent": f"Python {python_version.split(' ', maxsplit=1)[0]}",
         }
-
+        self._login()
         self._property_extractors()
 
     @property
@@ -184,30 +184,24 @@ class FortiSwitch:
         return response
 
     def _get_system_status(self) -> dict:
-        self._login()
         url = "api/v2/monitor/system/status"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()["results"]
 
     def _get_switch_capabilities(self):
-        self._login()
         url = "api/v2/monitor/switch/capabilities"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()
 
     def get_switch_port_state(self) -> List[Dict]:
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/switch/port"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         interface_list = []
         for _, interface_property in result.json()["results"].items():
@@ -219,11 +213,9 @@ class FortiSwitch:
 
     def get_switch_port_statistics(self):
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/switch/port-statistics"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         interface_list = []
         for interface_name, interface_property in result.json()["results"].items():
@@ -234,11 +226,9 @@ class FortiSwitch:
 
     def _get_switch_poe_status(self) -> List:
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/switch/poe-status"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()["results"]
 
@@ -262,11 +252,9 @@ class FortiSwitch:
 
     def _get_system_resource(self) -> Dict:
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/system/resource"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()["results"]
 
@@ -284,31 +272,25 @@ class FortiSwitch:
 
     def get_system_psu_status(self):
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/system/psu-status"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()["results"]
 
     def get_system_fan_status(self):
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/system/fan-status"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()["results"]
 
     def get_system_pcb_temp(self):
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/system/pcb-temp"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         temp_modules = []
         for module in result.json()["results"]:
@@ -325,11 +307,9 @@ class FortiSwitch:
 
     def get_system_upgrade_status(self):
         # noqa: D102
-        self._login()
         url = "api/v2/monitor/system/upgrade-status"
 
         result = self._req(url=url, method="get")
-        self._logout()
 
         return result.json()["results"]
 
