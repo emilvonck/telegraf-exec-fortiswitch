@@ -276,7 +276,16 @@ class FortiSwitch:
 
         result = self._req(url=url, method="get")
 
-        return result.json()["results"]
+        original_data = result.json()["results"]
+
+        psu_modules = []
+        for original_module in original_data:
+            module = {
+                k.replace("connection", "status"): v for k, v in original_module.items()
+            }
+
+            psu_modules.append(module)
+        return psu_modules
 
     def get_system_fan_status(self):
         # noqa: D102
