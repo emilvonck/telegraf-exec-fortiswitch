@@ -20,6 +20,8 @@ METHOD_LIST = [
     and not func.startswith("_")  # noqa: W503
 ]
 
+METHOD_LIST_STR = ",\n".join(METHOD_LIST)
+
 
 def _enrich_return_data(
     fortiswitch_obj: Type[FortiSwitch], data: Union[List[Dict], Dict]
@@ -119,10 +121,16 @@ my_parser.add_argument(
     "--password", type=str, help="FortiSwitch password.", required=False
 )
 my_parser.add_argument(
-    "--cls_method", type=str, help="FortiSwitch class method.", required=True
+    "--cls_method",
+    type=str,
+    help=f"FortiSwitch class method. {METHOD_LIST_STR}",
+    required=True,
 )
 my_parser.add_argument(
-    "--ignore_ssl", action="store_false", help="Skip SSL certificate verification."
+    "--ignore_ssl",
+    action="store_false",
+    help="Skip SSL certificate verification. Try to verify SSL if not provided.",
+    default=True,
 )
 args = my_parser.parse_args()
 
