@@ -333,3 +333,45 @@ class FortiSwitch:
         ]
 
         return {i: getattr(self, i) for i in PROPERTY_LIST}
+
+    def get_switch_modules_detail(self):
+        # noqa: D102
+        url = "api/v2/monitor/switch/modules-detail"
+
+        result = self._req(url=url, method="get")
+
+        sfp_modules = []
+        for module in result.json()["results"]:
+            module.update({"interface": module["port"]})
+            module.pop("port")
+            sfp_modules.append(module)
+
+        return sfp_modules
+
+    def get_switch_modules_status(self):
+        # noqa: D102
+        url = "api/v2/monitor/switch/modules-status"
+
+        result = self._req(url=url, method="get")
+
+        sfp_modules = []
+        for module in result.json()["results"]:
+            module.update({"interface": module["port"]})
+            module.pop("port")
+            sfp_modules.append(module)
+
+        return sfp_modules
+
+    def get_switch_modules_limits(self):
+        # noqa: D102
+        url = "api/v2/monitor/switch/modules-limits"
+
+        result = self._req(url=url, method="get")
+
+        sfp_modules = []
+        for module in result.json()["results"]:
+            module.update({"interface": module["port"]})
+            module.pop("port")
+            sfp_modules.append(module)
+
+        return sfp_modules
