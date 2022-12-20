@@ -360,6 +360,12 @@ class FortiSwitch:
             module.pop("port")
             sfp_modules.append(module)
 
+        for module in sfp_modules:
+            if module.get("lanes"):
+                for idx, lane in enumerate(module["lanes"]):
+                    module.update({f"lane_{idx}": {**lane}})
+                module.pop("lanes")
+
         return sfp_modules
 
     def get_switch_modules_limits(self):
